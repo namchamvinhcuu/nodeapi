@@ -1,0 +1,24 @@
+{
+  "development": {
+    "username": "sa",
+    "password": "YFemGoN1mCoYP7hrfUY5Re5z1YIe0hVG2R76R4pj5O7k2YQnM3",
+    "database": "NodeDemo",
+    "host": "118.69.130.73",
+    "dialect": "mssql",
+    "port": 1435
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": null,
+    "database": "database_production",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}
