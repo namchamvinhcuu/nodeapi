@@ -5,7 +5,11 @@
     "database": "NodeDemo",
     "host": "118.69.130.73",
     "dialect": "mssql",
-    "port": 1435
+    "port": 1435,
+    "query": {
+      "raw": true
+    },
+    "timezone": "+07:00"
   },
   "test": {
     "username": "root",

@@ -1,5 +1,6 @@
 import db from '../models/index'
 import bcrypt from 'bcrypt'
+import _ from 'lodash'
 
 const handleUserLogin = (email, password) => {
     return new Promise(async (resolve, reject) => {
@@ -67,23 +68,55 @@ const checkPostEmail = (email) => {
     })
 }
 
-const comparePostPassword = () => {
+// const comparePostPassword = () => {
+//     return new Promise(async (resolve, reject) => {
+//         try {
+//             let userInfo = await db.UserInfo.findOne({
+//                 where: { email: email }
+//             });
+
+//             if (userInfo) {
+//                 resolve(true);
+//             }
+//             resolve(false);
+//         } catch (error) {
+//             reject(error)
+//         }
+//     })
+// }
+
+const handleGetAllUsers = (userId) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let userInfo = await db.UserInfo.findOne({
-                where: { email: email }
-            });
-
-            if (userInfo) {
-                resolve(true);
+            let users;
+            if (userId) {
+                if (_.toInteger(userId) === 0) {
+                    users = null;
+                }
+                else {
+                    users = await db.UserInfo.findByPk(userId, {
+                        attributes: {
+                            exclude: ['password']
+                        }
+                    });
+                }
+            } else {
+                users = await db.UserInfo.findAll({
+                    attributes: {
+                        exclude: ['password']
+                    }
+                });
             }
-            resolve(false);
+
+            resolve(users);
         } catch (error) {
-            reject(error)
+            console.log(error)
+            reject(error);
         }
-    })
+    });
 }
 
 module.exports = {
     handleUserLogin: handleUserLogin,
+    handleGetAllUsers: handleGetAllUsers,
 }

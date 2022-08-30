@@ -14,8 +14,11 @@ let initWebRoutes = (app) => {
     router.get("/get-crud", homeController.getCRUD);
     router.get("/edit-crud", homeController.getEditCRUD);
 
-    //api for react
+    ////api for react
+    //USER
     router.post('/api/login', userController.handleLogin);
+    router.get('/api/get-users', userController.handleGetAllUsers);
+
 
     return app.use("/", router);
 }
