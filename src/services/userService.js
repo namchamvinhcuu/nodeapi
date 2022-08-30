@@ -2,6 +2,8 @@ import db from '../models/index'
 import bcrypt from 'bcrypt'
 import _ from 'lodash'
 
+const saltRounds = 10;
+
 const handleUserLogin = (email, password) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -15,7 +17,7 @@ const handleUserLogin = (email, password) => {
                     //     exclude: ['password']
                     // },
                     attributes: ['email', 'roleId', 'password'],
-                    raw: true,
+                    // raw: true,
                 })
 
                 //user existed
@@ -68,23 +70,6 @@ const checkPostEmail = (email) => {
     })
 }
 
-// const comparePostPassword = () => {
-//     return new Promise(async (resolve, reject) => {
-//         try {
-//             let userInfo = await db.UserInfo.findOne({
-//                 where: { email: email }
-//             });
-
-//             if (userInfo) {
-//                 resolve(true);
-//             }
-//             resolve(false);
-//         } catch (error) {
-//             reject(error)
-//         }
-//     })
-// }
-
 const handleGetAllUsers = (userId) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -116,7 +101,36 @@ const handleGetAllUsers = (userId) => {
     });
 }
 
+const createUser = (postUserData) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let hashPass = await hashUserPassword(postUserData.password);
+            await db.UserInfo.create({
+                ...postUserData, password: hashPass
+            });
+            resolve({
+                errCode: 0,
+                message: "OK"
+            })
+        } catch (error) {
+            reject(error);
+        }
+    })
+}
+
+const hashUserPassword = (password) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let hashPass = await bcrypt.hash(password, saltRounds);
+            resolve(hashPass);
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
 module.exports = {
     handleUserLogin: handleUserLogin,
     handleGetAllUsers: handleGetAllUsers,
+    createUser: createUser
 }
