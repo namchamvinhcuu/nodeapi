@@ -17,8 +17,10 @@ let initWebRoutes = (app) => {
     ////api for react
     //USER
     router.post('/api/login', userController.handleLogin);
-    router.get('/api/get-users', userController.handleGetAllUsers);
+    router.get('/api/get-users', userController.getUsers);
     router.post('/api/create-user', userController.createUser);
+    router.put('/api/edit-user', userController.editUser);
+    router.delete('/api/delete-user', userController.deleteUser);
 
 
     return app.use("/", router);

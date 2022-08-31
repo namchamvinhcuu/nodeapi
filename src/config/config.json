@@ -1,4 +1,9 @@
 {
+  "comment_for_sequelize": {
+    "query": {
+      "raw": true
+    }
+  },
   "development": {
     "username": "sa",
     "password": "YFemGoN1mCoYP7hrfUY5Re5z1YIe0hVG2R76R4pj5O7k2YQnM3",
@@ -6,10 +11,10 @@
     "host": "118.69.130.73",
     "dialect": "mssql",
     "port": 1435,
+    "timezone": "+07:00",
     "query": {
       "raw": true
-    },
-    "timezone": "+07:00"
+    }
   },
   "test": {
     "username": "root",

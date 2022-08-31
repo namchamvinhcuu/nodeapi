@@ -70,20 +70,22 @@ const checkPostEmail = (email) => {
     })
 }
 
-const handleGetAllUsers = (userId) => {
+const getUsers = (userId) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let users;
-            if (userId) {
+            let users = [];
+            if (userId && userId.toUpperCase() !== 'ALL') {
                 if (_.toInteger(userId) === 0) {
-                    users = null;
+                    users = [];
                 }
                 else {
-                    users = await db.UserInfo.findByPk(userId, {
+                    let user = await db.UserInfo.findByPk(userId, {
                         attributes: {
                             exclude: ['password']
                         }
                     });
+
+                    users = [...users, user];
                 }
             } else {
                 users = await db.UserInfo.findAll({
@@ -104,6 +106,15 @@ const handleGetAllUsers = (userId) => {
 const createUser = (postUserData) => {
     return new Promise(async (resolve, reject) => {
         try {
+            let checkEmailExisted = await db.checkPostEmail(postUserData.email);
+
+            if (checkEmailExisted) {
+                resolve({
+                    errCode: 1,
+                    message: "Email is existed!"
+                });
+            }
+
             let hashPass = await hashUserPassword(postUserData.password);
             await db.UserInfo.create({
                 ...postUserData, password: hashPass
@@ -111,11 +122,60 @@ const createUser = (postUserData) => {
             resolve({
                 errCode: 0,
                 message: "OK"
-            })
+            });
         } catch (error) {
             reject(error);
         }
     })
+}
+
+const editUser = (postUserData) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let user = await db.UserInfo.findByPk(postUserData.id, { raw: false });
+            if (!user) {
+                resolve({
+                    errCode: 2,
+                    errMessage: 'User is not existed!'
+                })
+            }
+            await user.update(postUserData);
+
+            resolve({
+                errCode: 0,
+                errMessage: 'User is updated!'
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+const deleteUser = (userId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let user = await db.UserInfo.findByPk(userId);
+            if (!user) {
+                resolve({
+                    errCode: 2,
+                    errMessage: 'User is not existed!'
+                })
+            }
+
+            //delete record using sequelize
+            await db.UserInfo.destroy({
+                where: {
+                    id: userId
+                }
+            });
+            resolve({
+                errCode: 0,
+                errMessage: 'Deleted!'
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
 }
 
 const hashUserPassword = (password) => {
@@ -131,6 +191,8 @@ const hashUserPassword = (password) => {
 
 module.exports = {
     handleUserLogin: handleUserLogin,
-    handleGetAllUsers: handleGetAllUsers,
-    createUser: createUser
+    getUsers: getUsers,
+    createUser: createUser,
+    editUser: editUser,
+    deleteUser: deleteUser,
 }
