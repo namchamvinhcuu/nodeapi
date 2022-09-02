@@ -9,9 +9,9 @@ const getAllUser = () => {
             let users = await db.UserInfo.findAll({
                 raw: true
             });
-            resolve(users);
+            return resolve(users);
         } catch (error) {
-            reject(error);
+            return reject(error);
         }
     });
 }
@@ -25,9 +25,9 @@ const createNewUser = async (data) => {
                 ...data, password: passHash
             });
 
-            resolve("Successfully !");
+            return resolve("Successfully !");
         } catch (error) {
-            reject(error);
+            return reject(error);
         }
     });
 }
@@ -36,10 +36,10 @@ const hashUserPassword = async (password) => {
     return new Promise((resolve, reject) => {
         try {
             bcrypt.hash(password, saltRounds, (err, hash) => {
-                resolve(hash);
+                return resolve(hash);
             });
-        } catch (e) {
-            reject(e);
+        } catch (error) {
+            return reject(error);
         }
     })
 }
@@ -48,9 +48,9 @@ const getUserInfoById = async (id) => {
     return new Promise(async (resolve, reject) => {
         try {
             let userInfo = await db.UserInfo.findByPk(id);
-            resolve(userInfo);
-        } catch (e) {
-            reject(e);
+            return resolve(userInfo);
+        } catch (error) {
+            return reject(error);
         }
     })
 }

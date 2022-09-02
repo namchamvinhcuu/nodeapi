@@ -46,9 +46,9 @@ const handleUserLogin = (email, password) => {
                 userInfo.errMessage = `Email isnt existed!`;
             }
 
-            resolve(userInfo);
+            return resolve(userInfo);
         } catch (error) {
-            reject(error);
+            return reject(error);
         }
     })
 }
@@ -61,11 +61,11 @@ const checkPostEmail = (email) => {
             });
 
             if (userInfo) {
-                resolve(true);
+                return resolve(true);
             }
-            resolve(false);
+            return resolve(false);
         } catch (error) {
-            reject(error)
+            return reject(error)
         }
     })
 }
@@ -95,10 +95,10 @@ const getUsers = (userId) => {
                 });
             }
 
-            resolve(users);
+            return resolve(users);
         } catch (error) {
             console.log(error)
-            reject(error);
+            return reject(error);
         }
     });
 }
@@ -106,10 +106,10 @@ const getUsers = (userId) => {
 const createUser = (postUserData) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let checkEmailExisted = await db.checkPostEmail(postUserData.email);
+            let checkEmailExisted = await checkPostEmail(postUserData.email);
 
             if (checkEmailExisted) {
-                resolve({
+                return resolve({
                     errCode: 1,
                     message: "Email is existed!"
                 });
@@ -119,12 +119,12 @@ const createUser = (postUserData) => {
             await db.UserInfo.create({
                 ...postUserData, password: hashPass
             });
-            resolve({
+            return resolve({
                 errCode: 0,
                 message: "OK"
             });
         } catch (error) {
-            reject(error);
+            return reject(error);
         }
     })
 }
@@ -134,19 +134,19 @@ const editUser = (postUserData) => {
         try {
             let user = await db.UserInfo.findByPk(postUserData.id, { raw: false });
             if (!user) {
-                resolve({
+                return resolve({
                     errCode: 2,
                     errMessage: 'User is not existed!'
                 })
             }
             await user.update(postUserData);
 
-            resolve({
+            return resolve({
                 errCode: 0,
                 errMessage: 'User is updated!'
             });
         } catch (error) {
-            reject(error);
+            return reject(error);
         }
     });
 }
@@ -156,7 +156,7 @@ const deleteUser = (userId) => {
         try {
             let user = await db.UserInfo.findByPk(userId);
             if (!user) {
-                resolve({
+                return resolve({
                     errCode: 2,
                     errMessage: 'User is not existed!'
                 })
@@ -168,12 +168,12 @@ const deleteUser = (userId) => {
                     id: userId
                 }
             });
-            resolve({
+            return resolve({
                 errCode: 0,
                 errMessage: 'Deleted!'
             });
         } catch (error) {
-            reject(error);
+            return reject(error);
         }
     });
 }
@@ -182,9 +182,9 @@ const hashUserPassword = (password) => {
     return new Promise(async (resolve, reject) => {
         try {
             let hashPass = await bcrypt.hash(password, saltRounds);
-            resolve(hashPass);
-        } catch (e) {
-            reject(e);
+            return resolve(hashPass);
+        } catch (error) {
+            return reject(error);
         }
     })
 }

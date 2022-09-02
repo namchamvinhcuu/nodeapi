@@ -54,13 +54,13 @@ const editUser = async (req, res) => {
 }
 
 const deleteUser = async (req, res) => {
-    if (!req.query.id) {
+    if (!req.body.id) {
         return res.status(200).json({
             errCode: 1,
             errMessage: 'Missing required params!'
         });
     }
-    let message = await userService.deleteUser(req.query.id);
+    let message = await userService.deleteUser(req.body.id);
     return res.status(200).json(message);
 }
 
