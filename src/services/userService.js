@@ -16,7 +16,7 @@ const handleUserLogin = (email, password) => {
                     // attributes: {
                     //     exclude: ['password']
                     // },
-                    attributes: ['email', 'roleId', 'password'],
+                    attributes: ['email', 'roleId', 'password', 'firstName', 'lastName'],
                     // raw: true,
                 })
 
