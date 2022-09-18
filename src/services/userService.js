@@ -117,7 +117,7 @@ const createUser = (postUserData) => {
 
             let hashPass = await hashUserPassword(postUserData.password);
             await db.UserInfo.create({
-                ...postUserData, password: hashPass
+                ...postUserData, password: hashPass, id: null
             });
             return resolve({
                 errCode: 0,
@@ -139,7 +139,7 @@ const editUser = (postUserData) => {
                     errMessage: 'User is not existed!'
                 })
             }
-            await user.update(postUserData);
+            await user.update({ ...postUserData, password: user.password });
 
             return resolve({
                 errCode: 0,
