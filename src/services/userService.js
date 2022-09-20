@@ -70,11 +70,11 @@ const checkPostEmail = (email) => {
     })
 }
 
-const getUsers = (userId) => {
+const getUsers = (query) => {
     return new Promise(async (resolve, reject) => {
         try {
             let users = [];
-            if (userId && userId.toUpperCase() !== 'ALL') {
+            if (query.id && query.id.toUpperCase() !== 'ALL') {
                 if (_.toInteger(userId) === 0) {
                     users = [];
                 }
@@ -88,11 +88,21 @@ const getUsers = (userId) => {
                     users = [...users, user];
                 }
             } else {
-                users = await db.UserInfo.findAll({
+                // users = await db.UserInfo.findAll({
+                //     attributes: {
+                //         exclude: ['password']
+                //     }
+                // });
+
+                users = await db.UserInfo.findAndCountAll({
                     attributes: {
                         exclude: ['password']
-                    }
+                    },
+                    limit: query.pageSize ? parseInt(query.pageSize) : 0,
+                    offset: query.page ? parseInt(query.page) * parseInt(query.pageSize) : 0,
                 });
+
+                console.log('user', users)
             }
 
             return resolve(users);

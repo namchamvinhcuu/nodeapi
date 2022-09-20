@@ -35,7 +35,7 @@ const getUsers = async (req, res) => {
         });
     }
 
-    let users = await userService.getUsers(id);
+    let users = await userService.getUsers(req.query);
     return res.status(200).json({
         errCode: 0,
         errMessage: 'OK',
